@@ -234,11 +234,10 @@ func (l Logger) doPrintf(level LogLevel, format string, v ...interface{}) {
 	funcName, fileName, lineNum := getRuntimeInfo()
 	format = fmt.Sprintf("%5s [%s] (%s:%d) - %s", tagName[level], path.Base(funcName), path.Base(fileName), lineNum, format)
 	if l.isStdout {
-	    format = fmt.Sprintf("%s %s %s", colorOpen(level), format, colorClose())
-	    log.Printf(format, v...)
-	} else {
-	    l.logger.Printf(format, v...)
+	    format2 := fmt.Sprintf("%s %s %s", colorOpen(level), format, colorClose())
+	    log.Printf(format2, v...)
 	}
+	l.logger.Printf(format, v...)
 	if level == FATAL {
 	    os.Exit(1)
 	}
@@ -256,9 +255,8 @@ func (l Logger) doPrintln(level LogLevel, v ...interface{}) {
 	if l.isStdout {
 	    value2 := fmt.Sprintf("%s %s %s", colorOpen(level), value, colorClose())
 	    log.Print(value2)
-	} else {
-	    l.logger.Print(value)
 	}
+	l.logger.Print(value)
 	if level == FATAL {
 	    os.Exit(1)
 	}
